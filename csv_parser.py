@@ -1,5 +1,5 @@
-def check_validity(data):
-	cols = len(data[0])
+def check_validity(data, attr):
+	cols = len(attr)
 	rows = len(data)
 	flag = True
 	for i in range(rows):
@@ -8,6 +8,11 @@ def check_validity(data):
 			flag = False
 			break
 	return flag
+
+def sort_func(data, attr, col_name):
+	col_index = attr.index(col_name)
+	data.sort(key=lambda col: col[col_index])
+
 
 filename = str(input("Enter the name of the csv file to parse (including file extension): "))
 
@@ -39,13 +44,17 @@ try:
 						temp+=ch
 			else:
 				temp+=ch
-	if(check_validity(data)):
+	attr = data[0]
+	del data[0]
+	if(check_validity(data, attr)):
+		col_name = str(input("Enter the column according to which the data will be sorted : "))
+		sort_func(data, attr, col_name)
 		print ("Data present in the file : ")
-		cols = len(data[0])
+		cols = len(attr)
 		for i in range(cols):
-			print(data[0][i], end="| ")
+			print(attr[i], end="| ")
 		print('')
-		for i in range(1,len(data)):
+		for i in range(len(data)):
 			for j in range(cols):
 				print(data[i][j], end="| ")
 			print('')
