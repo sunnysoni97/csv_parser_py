@@ -1,0 +1,1 @@
+A simple script to parse csv files in Python. More functionality to be added on.
