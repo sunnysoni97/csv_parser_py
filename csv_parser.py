@@ -50,10 +50,10 @@ def disp_data(data,attr,cols):
 		print('')
 	print_line()
 
-def write_data(file,data, attr, cols):
-	flag = str(input("Do you want to write new data ? (Y/N) : ")).upper()
+def add_data(data, attr, cols, rows):
+	flag = str(input("Do you want to add new entry ? (Y/N) : ")).upper()
 	if(flag=="N"):
-		return
+		return rows
 	try:
 		print_line()
 		print("Enter data for the new entry : ")
@@ -64,13 +64,33 @@ def write_data(file,data, attr, cols):
 			new_row.append(temp)
 		print_line()
 		data.append(new_row)
-		file.seek(0,2)
-		for temp in new_row:
-			file.write(temp+",")
-		file.seek(file.tell()-1,0)
-		file.write("\n")
+		rows+=1
 		sort_func(data,attr)
 		disp_data(data,attr,cols)
+		return rows
+	except Exception:
+		print("Couldnt add new entry!")
+
+def write_sort_data(file, data, attr, cols, rows):
+	flag = str(input("Do you want to write the changes to csv file ? (Y/N) : ")).upper()
+	if(flag=="N"):
+		return
+	try:
+		file.seek(0,0)
+		for temp in attr:
+			if(temp.find(',')!=(-1)):
+				temp = str('\"'+temp+'\"')
+			file.write(temp+",")
+		file.seek(file.tell()-1,0)
+		file.write('\n')
+		for i in range(rows):
+			for j in range(cols):
+				if(data[i][j].find(',')!=(-1)):
+					data[i][j] = str('\"'+data[i][j]+'\"')
+				file.write(data[i][j]+",")
+			file.seek(file.tell()-1,0)
+			file.write('\n')
+
 	except Exception:
 		print("Couldnt write data onto the file!")
 
@@ -112,7 +132,8 @@ try:
 	if(check_validity(data, cols, rows)):
 		sort_func(data, attr)
 		disp_data(data, attr, cols)
-		write_data(file,data,attr,cols)
+		rows = add_data(data,attr,cols,rows)
+		write_sort_data(file,data,attr,cols,rows)
 	else:
 		print ("Invalid CSV File!")
 	file.close()
