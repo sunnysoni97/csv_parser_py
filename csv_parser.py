@@ -9,8 +9,14 @@ def check_validity(data, attr):
 			break
 	return flag
 
-def sort_func(data, attr, col_name):
+def sort_func(data, attr):
 	try: 
+		print ("------------------------------")
+		print ("List of columns : ")
+		for col in attr:
+			print(col)
+		print ("------------------------------") 
+		col_name = str(input("Enter the column according to which the data will be sorted : "))
 		col_index = attr.index(col_name)
 		data.sort(key=lambda col: col[col_index])
 	except ValueError:
@@ -22,11 +28,11 @@ def disp_data(data,attr):
 	print ("------------------------------")
 	cols = len(attr)
 	for i in range(cols):
-		print(attr[i], end="| ")
+		print(attr[i], end=" | ")
 	print('')
 	for i in range(len(data)):
 		for j in range(cols):
-			print(data[i][j], end="| ")
+			print(data[i][j], end=" | ")
 		print('')
 	print ("------------------------------")
 
@@ -65,8 +71,7 @@ try:
 	attr = data[0]
 	del data[0]
 	if(check_validity(data, attr)):
-		col_name = str(input("Enter the column according to which the data will be sorted : "))
-		sort_func(data, attr, col_name)
+		sort_func(data, attr)
 		disp_data(data, attr)
 	else:
 		print ("Invalid CSV File")
