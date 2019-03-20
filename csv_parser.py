@@ -1,3 +1,11 @@
+import os
+
+def print_line():
+	sz = os.get_terminal_size()[0]
+	for i in range(sz):
+		print('-',end='')
+	print('')
+
 def check_validity(data, attr):
 	cols = len(attr)
 	rows = len(data)
@@ -11,11 +19,11 @@ def check_validity(data, attr):
 
 def sort_func(data, attr):
 	try: 
-		print ("------------------------------")
+		print_line()
 		print ("List of columns : ")
 		for col in attr:
 			print(col)
-		print ("------------------------------") 
+		print_line()
 		col_name = str(input("Enter the column according to which the data will be sorted : "))
 		col_index = attr.index(col_name)
 		data.sort(key=lambda col: col[col_index])
@@ -23,9 +31,9 @@ def sort_func(data, attr):
 		print("Column Name not found!")
 
 def disp_data(data,attr):
-	print ("------------------------------")
+	print_line()
 	print ("Data : ")
-	print ("------------------------------")
+	print_line()
 	cols = len(attr)
 	for i in range(cols):
 		print(attr[i], end=" | ")
@@ -34,7 +42,7 @@ def disp_data(data,attr):
 		for j in range(cols):
 			print(data[i][j], end=" | ")
 		print('')
-	print ("------------------------------")
+	print_line()
 
 
 
@@ -79,4 +87,3 @@ try:
 
 except FileNotFoundError:
 	print("File couldnt be found!")
-
