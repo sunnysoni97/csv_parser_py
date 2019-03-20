@@ -6,9 +6,12 @@ def print_line():
 		print('-',end='')
 	print('')
 
-def check_validity(data, attr):
+def ret_metrics(data, attr):
 	cols = len(attr)
 	rows = len(data)
+	return (cols,rows)
+
+def check_validity(data,cols,rows):
 	flag = True
 	for i in range(rows):
 		colt = len(data[i])
@@ -18,9 +21,13 @@ def check_validity(data, attr):
 	return flag
 
 def sort_func(data, attr):
+	flag = str(input("Do you want to sort the data?(Y/N) : ")).upper()
+	if(flag=="N"):
+		return
 	try: 
 		print_line()
 		print ("List of columns : ")
+		print_line()
 		for col in attr:
 			print(col)
 		print_line()
@@ -30,11 +37,10 @@ def sort_func(data, attr):
 	except ValueError:
 		print("Column Name not found!")
 
-def disp_data(data,attr):
+def disp_data(data,attr,cols):
 	print_line()
 	print ("Data : ")
 	print_line()
-	cols = len(attr)
 	for i in range(cols):
 		print(attr[i], end=" | ")
 	print('')
@@ -44,8 +50,29 @@ def disp_data(data,attr):
 		print('')
 	print_line()
 
-def write_data(filename,attr)
-
+def write_data(file,data, attr, cols):
+	flag = str(input("Do you want to write new data ? (Y/N) : ")).upper()
+	if(flag=="N"):
+		return
+	try:
+		print_line()
+		print("Enter data for the new entry : ")
+		print_line()
+		new_row=[]
+		for col in attr:
+			temp = str(input(str(col)+" : "))
+			new_row.append(temp)
+		print_line()
+		data.append(new_row)
+		file.seek(0,2)
+		for temp in new_row:
+			file.write(temp+",")
+		file.seek(file.tell()-1,0)
+		file.write("\n")
+		sort_func(data,attr)
+		disp_data(data,attr,cols)
+	except Exception:
+		print("Couldnt write data onto the file!")
 
 
 filename = str(input("Enter the name of the csv file to parse (including file extension): "))
@@ -65,6 +92,7 @@ try:
 				temp=""
 
 			elif(ch=='\n'):
+				row.append(temp)
 				data.append(row)
 				row=[]
 				temp=""
@@ -80,11 +108,13 @@ try:
 				temp+=ch
 	attr = data[0]
 	del data[0]
-	if(check_validity(data, attr)):
+	(cols, rows) = ret_metrics(data,attr)
+	if(check_validity(data, cols, rows)):
 		sort_func(data, attr)
-		disp_data(data, attr)
+		disp_data(data, attr, cols)
+		write_data(file,data,attr,cols)
 	else:
-		print ("Invalid CSV File")
+		print ("Invalid CSV File!")
 	file.close()
 
 except FileNotFoundError:
