@@ -44,6 +44,8 @@ def disp_data(data,attr):
 		print('')
 	print_line()
 
+def write_data(filename,attr)
+
 
 
 filename = str(input("Enter the name of the csv file to parse (including file extension): "))
