@@ -10,8 +10,26 @@ def check_validity(data, attr):
 	return flag
 
 def sort_func(data, attr, col_name):
-	col_index = attr.index(col_name)
-	data.sort(key=lambda col: col[col_index])
+	try: 
+		col_index = attr.index(col_name)
+		data.sort(key=lambda col: col[col_index])
+	except ValueError:
+		print("Column Name not found!")
+
+def disp_data(data,attr):
+	print ("------------------------------")
+	print ("Data : ")
+	print ("------------------------------")
+	cols = len(attr)
+	for i in range(cols):
+		print(attr[i], end="| ")
+	print('')
+	for i in range(len(data)):
+		for j in range(cols):
+			print(data[i][j], end="| ")
+		print('')
+	print ("------------------------------")
+
 
 
 filename = str(input("Enter the name of the csv file to parse (including file extension): "))
@@ -49,19 +67,11 @@ try:
 	if(check_validity(data, attr)):
 		col_name = str(input("Enter the column according to which the data will be sorted : "))
 		sort_func(data, attr, col_name)
-		print ("Data present in the file : ")
-		cols = len(attr)
-		for i in range(cols):
-			print(attr[i], end="| ")
-		print('')
-		for i in range(len(data)):
-			for j in range(cols):
-				print(data[i][j], end="| ")
-			print('')
+		disp_data(data, attr)
 	else:
 		print ("Invalid CSV File")
-except IOError:
-	print("File couldnt be found or operations failed!")
-
-finally:
 	file.close()
+
+except FileNotFoundError:
+	print("File couldnt be found!")
+
