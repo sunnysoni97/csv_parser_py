@@ -94,49 +94,52 @@ def write_sort_data(file, data, attr, cols, rows):
 	except Exception:
 		print("Couldnt write data onto the file!")
 
+def read_file(filaname):
+	try:
+		file = open(filename,"r+")
+		temp = ""
+		data = []
+		row = []
+		while(True):
+			ch = file.read(1)
+			if(len(ch) < 1):
+				break
+			else:
+				if(ch==','):
+					row.append(temp)
+					temp=""
+
+				elif(ch=='\n'):
+					row.append(temp)
+					data.append(row)
+					row=[]
+					temp=""
+				elif(ch=='"'):
+					temp = ""
+					while(True):
+						ch = file.read(1)
+						if((len(ch)<1) or ch=='"'):
+							break
+						else:
+							temp+=ch
+				else:
+					temp+=ch
+		return (file, data)
+	
+	except FileNotFoundError:
+		print("File couldnt be found!")
+
 
 filename = str(input("Enter the name of the csv file to parse (including file extension): "))
-
-try:
-	file = open(filename,"r+")
-	temp = ""
-	data = []
-	row = []
-	while(True):
-		ch = file.read(1)
-		if(len(ch) < 1):
-			break
-		else:
-			if(ch==','):
-				row.append(temp)
-				temp=""
-
-			elif(ch=='\n'):
-				row.append(temp)
-				data.append(row)
-				row=[]
-				temp=""
-			elif(ch=='"'):
-				temp = ""
-				while(True):
-					ch = file.read(1)
-					if((len(ch)<1) or ch=='"'):
-						break
-					else:
-						temp+=ch
-			else:
-				temp+=ch
-	attr = data[0]
-	del data[0]
-	(cols, rows) = ret_metrics(data,attr)
-	if(check_validity(data, cols, rows)):
-		sort_func(data, attr)
-		disp_data(data, attr, cols)
-		rows = add_data(data,attr,cols,rows)
-		write_sort_data(file,data,attr,cols,rows)
-	else:
-		print ("Invalid CSV File!")
-	file.close()
-
-except FileNotFoundError:
-	print("File couldnt be found!")
+(file,data) = read_file(filename)
+attr = data[0] 
+del data[0]
+(cols, rows) = ret_metrics(data,attr)
+if(check_validity(data, cols, rows)):
+	sort_func(data, attr)
+	disp_data(data, attr, cols)
+	rows = add_data(data,attr,cols,rows)
+	write_sort_data(file,data,attr,cols,rows)
+else:
+	print ("Invalid CSV File!")
+file.close()
